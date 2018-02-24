@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Bulbs
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped" style="width:100%">
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Location</th>
+      </tr>
+    {% for product in products%}
+      <tr>
+        <td>{{ product.product }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.location }}</td>
+      </tr>
+{% endfor %}
+    </table>
+
+{% endblock %}
