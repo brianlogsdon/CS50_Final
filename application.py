@@ -6,7 +6,7 @@ from werkzeug.exceptions import default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
 from passlib.apps import custom_app_context as pwd_context
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required
 
 # Configure application
 app = Flask(__name__)
@@ -20,8 +20,7 @@ if app.config["DEBUG"]:
         response.headers["Pragma"] = "no-cache"
         return response
 
-# Custom filter
-app.jinja_env.filters["usd"] = usd
+
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -48,13 +47,24 @@ def bulbs():
 
     return render_template("bulbs.html", products=bulbs)
 
-@app.route("/history")
+@app.route("/fixtures")
 @login_required
-def history():
-    """Show history of transactions"""
+def quote():
+    """Display fixture inventory."""
 
-    return apology("sorry")
+    fixtures = db.execute("SELECT * FROM fixtures")
 
+
+    return render_template("fixtures.html", products=fixtures)
+
+@app.route("/misc")
+@login_required
+def misc():
+    """display misc inventory"""
+    inventory = db.execute("SELECT * FROM inventory")
+
+
+    return render_template("misc.html", products=inventory)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -104,15 +114,6 @@ def logout():
     return redirect("/")
 
 
-@app.route("/fixtures")
-@login_required
-def quote():
-    """Display fixture inventory."""
-
-    fixtures = db.execute("SELECT * FROM fixtures")
-
-
-    return render_template("fixtures.html", products=fixtures)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -151,14 +152,7 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route("/misc")
-@login_required
-def misc():
-    """display misc inventory"""
-    inventory = db.execute("SELECT * FROM inventory")
 
-
-    return render_template("misc.html", products=inventory)
 
 
 
